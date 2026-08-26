@@ -20,6 +20,9 @@
     ],
     "license": "MIT",
     "type": "module",
+    "workspaces": [
+        "."
+    ],
     "publishConfig": {
         "access": "public"
     },
@@ -37,12 +40,20 @@
     "scripts": {
         "build": "tsdown",
         "ts7": "node ../../node_modules/@typescript/native/bin/tsc",
-        "typecheck": "yarn ts7 --noEmit"
+        "typecheck": "yarn ts7 --noEmit",
+        "lint": "biome lint .",
+        "format": "biome format --write .",
+        "check": "biome check . && yarn typecheck",
+        "fix": "biome check --write . && yarn typecheck",
+        "changeset": "changeset",
+        "release": "changeset version && yarn build && npm publish --access public"
     },
     "peerDependencies": {
         "koishi": "^4.17.4"
     },
     "devDependencies": {
+        "@biomejs/biome": "^2.5.9",
+        "@changesets/cli": "^2.31.1",
         "@types/node": "^26.1.2",
         "@typescript/native": "npm:typescript@7.0.2",
         "tsdown": "^0.22.14"

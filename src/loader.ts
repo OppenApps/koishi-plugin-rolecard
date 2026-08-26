@@ -12,22 +12,22 @@
  * 因此核心引擎可以专注于运行时行为，二者完全解耦。
  */
 
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
-import { extname, resolve } from 'node:path';
-import type { Rolecard, RolecardImage, RolecardManifest, TriggerData, WordsData } from './types';
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { extname, resolve } from "node:path";
+import type { Rolecard, RolecardImage, RolecardManifest, TriggerData, WordsData } from "./types.js";
 
 /** 清单中路径字段的默认值。 */
-const DEFAULT_WORDS_FILE = 'words.json';
-const DEFAULT_TRIGGER_FILE = 'trigger-words.json';
+const DEFAULT_WORDS_FILE = "words.json";
+const DEFAULT_TRIGGER_FILE = "trigger-words.json";
 
 /** 支持的图片扩展名到 MIME 类型映射。 */
 const IMAGE_MIME_MAP: Record<string, string> = {
-    '.png': 'image/png',
-    '.jpg': 'image/jpeg',
-    '.jpeg': 'image/jpeg',
-    '.gif': 'image/gif',
-    '.webp': 'image/webp',
-    '.bmp': 'image/bmp',
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".gif": "image/gif",
+    ".webp": "image/webp",
+    ".bmp": "image/bmp",
 };
 
 /** 扫描目录下所有支持的图片文件，返回带 MIME 类型的列表。 */
@@ -45,7 +45,7 @@ function scanImages(dir: string): RolecardImage[] {
 function readJson<T>(path: string): T | null {
     if (!existsSync(path)) return null;
     try {
-        return JSON.parse(readFileSync(path, 'utf8')) as T;
+        return JSON.parse(readFileSync(path, "utf8")) as T;
     } catch {
         return null;
     }
@@ -57,7 +57,7 @@ function readJson<T>(path: string): T | null {
  * @returns 解析成功返回完整 `Rolecard`；清单缺失/数据无效返回 `null`。
  */
 export function loadRolecard(dir: string): Rolecard | null {
-    const manifest = readJson<RolecardManifest>(resolve(dir, 'rolecard.json'));
+    const manifest = readJson<RolecardManifest>(resolve(dir, "rolecard.json"));
     if (!manifest?.id || !manifest?.name) return null;
 
     const wordsFile = manifest.wordsFile ?? DEFAULT_WORDS_FILE;

@@ -14,30 +14,29 @@
  * 无需修改本模块任何代码。
  */
 
-import { readFileSync } from 'node:fs';
-import type { Context, Logger, Session } from 'koishi';
-import { h } from 'koishi';
-import type { Config, Quote, Rolecard } from './types';
+import { readFileSync } from "node:fs";
+import type { Context, Logger, Session } from "koishi";
+import { h } from "koishi";
+import type { Config, Quote, Rolecard } from "./types.js";
 
-/** 从数组中随机取一个元素。 */
-function pick<T>(arr: T[]): T {
-    return arr[Math.floor(Math.random() * arr.length)];
+/** 从非空数组中随机取一个元素；空数组属于编程错误，直接抛出。 */
+function pick<T>(arr: readonly T[]): T {
+    const item = arr[Math.floor(Math.random() * arr.length)];
+    if (item === undefined) throw new Error("pick: 数组为空，无法随机选取");
+    return item;
 }
 
 export class RolecardEngine {
     private readonly logger: Logger;
     private readonly quotesByTag = new Map<string, Quote[]>();
     private readonly allQuotes: Quote[];
-    private readonly groups: Rolecard['triggers']['groups'];
+    private readonly groups: Rolecard["triggers"]["groups"];
     private readonly imageBuffers: { buffer: Buffer; mime: string }[] = [];
     private readonly lastTrigger = new Map<string, number>();
+    private readonly config: Config;
 
-    constructor(
-        ctx: Context,
-        // biome-ignore lint/correctness/noUnusedPrivateClassMembers: 预留的
-        private readonly rolecard: Rolecard,
-        private readonly config: Config
-    ) {
+    constructor(ctx: Context, rolecard: Rolecard, config: Config) {
+        this.config = config;
         this.logger = ctx.logger(`rolecard:${rolecard.manifest.id}`);
 
         // 按标签建立台词索引
@@ -67,13 +66,13 @@ export class RolecardEngine {
                 }
             }
             if (this.imageBuffers.length === 0) {
-                this.logger.warn('所有插图加载失败，将不发送图片');
+                this.logger.warn("所有插图加载失败，将不发送图片");
             }
         } else {
-            this.logger.warn('未找到角色卡插图，将不发送图片');
+            this.logger.warn("未找到角色卡插图，将不发送图片");
         }
 
-        ctx.on('message', (session) => this.handle(session));
+        ctx.on("message", (session) => void this.handle(session));
 
         this.logger.info(`角色卡已加载：${rolecard.manifest.name}`);
     }
@@ -83,8 +82,8 @@ export class RolecardEngine {
         if (!session.userId || session.userId === session.selfId) return;
 
         // 纯文本：剥离 koishi 元素标签（如 <at id="..."/>）
-        const raw = session.content ?? '';
-        const content = raw.replace(/<[^>]+>/g, '');
+        const raw = session.content ?? "";
+        const content = raw.replace(/<[^>]+>/g, "");
         if (!content) return;
 
         const channelId = session.channelId ?? session.guildId ?? session.userId;
@@ -102,7 +101,7 @@ export class RolecardEngine {
         const disabledTags = this.getDisabledTags();
         for (const g of this.groups) {
             if (disabledTags.includes(g.tag)) continue;
-            if (g.matchMode === 'include' && g.keywords.some((k) => content.includes(k))) {
+            if (g.matchMode === "include" && g.keywords.some((k) => content.includes(k))) {
                 matchedTag = g.tag;
                 break;
             }
@@ -135,7 +134,7 @@ export class RolecardEngine {
                 await session.send(quote.text);
             }
         } catch (e) {
-            this.logger.warn('发送消息失败', e);
+            this.logger.warn("发送消息失败", e);
         }
     }
 
@@ -167,7 +166,7 @@ export class RolecardEngine {
         return (
             (
                 this.config as Config & {
-                    __channelRoleConfig?: Config['channels'][number]['belikovConfig'];
+                    __channelRoleConfig?: Config["channels"][number]["belikovConfig"];
                 }
             ).__channelRoleConfig ?? null
         );

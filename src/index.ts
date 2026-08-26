@@ -13,14 +13,14 @@
  * `rolecards` 字段选择该群聊启用哪些角色卡。新增角色卡只需添加数据目录。
  */
 
-import { resolve } from 'node:path';
-import type { Context } from 'koishi';
-import { Config } from './config';
-import { RolecardEngine } from './core';
-import { loadRolecards } from './loader';
-import type { ChannelConfig, Config as ConfigType, Rolecard } from './types';
+import { resolve } from "node:path";
+import type { Context } from "koishi";
+import { Config } from "./config.js";
+import { RolecardEngine } from "./core.js";
+import { loadRolecards } from "./loader.js";
+import type { ChannelConfig, Config as ConfigType, Rolecard } from "./types.js";
 
-export const name = 'rolecard';
+export const name = "rolecard";
 
 export const usage = `
 <div style="border-radius: 10px; border: 1px solid #ddd; padding: 16px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
@@ -45,19 +45,19 @@ export const usage = `
 export { Config };
 
 export function apply(ctx: Context, config: ConfigType) {
-    const logger = ctx.logger('rolecard');
+    const logger = ctx.logger("rolecard");
 
     // 角色卡目录位于插件包根目录下的 assets/
-    const assetsDir = resolve(__dirname, '..', 'assets');
+    const assetsDir = resolve(__dirname, "..", "assets");
     const rolecards = loadRolecards(assetsDir);
 
     if (rolecards.length === 0) {
-        logger.warn('未找到任何角色卡，请检查 assets 目录');
+        logger.warn("未找到任何角色卡，请检查 assets 目录");
         return;
     }
 
     const rolecardMap = new Map<string, Rolecard>(rolecards.map((r) => [r.manifest.id, r]));
-    logger.info(`发现角色卡：${[...rolecardMap.keys()].join(', ')}`);
+    logger.info(`发现角色卡：${[...rolecardMap.keys()].join(", ")}`);
 
     // 按 channelId 索引群聊配置
     const channelMap = new Map<string, ChannelConfig>();
@@ -71,7 +71,7 @@ export function apply(ctx: Context, config: ConfigType) {
 
         // 别里科夫角色卡
         if (ch.belikov) {
-            const rolecard = rolecardMap.get('belikov');
+            const rolecard = rolecardMap.get("belikov");
             if (!rolecard) {
                 logger.warn(`群聊 ${ch.channelId}：未找到角色卡 "belikov"，跳过`);
             } else {
@@ -80,7 +80,7 @@ export function apply(ctx: Context, config: ConfigType) {
                     ...config,
                     __channelRoleConfig: ch.belikovConfig,
                 } as ConfigType & {
-                    __channelRoleConfig?: NonNullable<ChannelConfig['belikovConfig']>;
+                    __channelRoleConfig?: NonNullable<ChannelConfig["belikovConfig"]>;
                 };
 
                 // 用子作用域隔离各引擎，仅接收白名单内群聊的消息
@@ -92,7 +92,7 @@ export function apply(ctx: Context, config: ConfigType) {
 
         // 格里高尔角色卡
         if (ch.gregorSamsa) {
-            const rolecard = rolecardMap.get('gregor-samsa');
+            const rolecard = rolecardMap.get("gregor-samsa");
             if (!rolecard) {
                 logger.warn(`群聊 ${ch.channelId}：未找到角色卡 "gregor-samsa"，跳过`);
             } else {
@@ -100,7 +100,7 @@ export function apply(ctx: Context, config: ConfigType) {
                     ...config,
                     __channelRoleConfig: ch.gregorSamsaConfig,
                 } as ConfigType & {
-                    __channelRoleConfig?: NonNullable<ChannelConfig['gregorSamsaConfig']>;
+                    __channelRoleConfig?: NonNullable<ChannelConfig["gregorSamsaConfig"]>;
                 };
 
                 let subCtx = ctx.channel(ch.channelId);
@@ -111,7 +111,7 @@ export function apply(ctx: Context, config: ConfigType) {
 
         // 孔乙己角色卡
         if (ch.kongYiji) {
-            const rolecard = rolecardMap.get('kong-yiji');
+            const rolecard = rolecardMap.get("kong-yiji");
             if (!rolecard) {
                 logger.warn(`群聊 ${ch.channelId}：未找到角色卡 "kong-yiji"，跳过`);
             } else {
@@ -119,7 +119,7 @@ export function apply(ctx: Context, config: ConfigType) {
                     ...config,
                     __channelRoleConfig: ch.kongYijiConfig,
                 } as ConfigType & {
-                    __channelRoleConfig?: NonNullable<ChannelConfig['kongYijiConfig']>;
+                    __channelRoleConfig?: NonNullable<ChannelConfig["kongYijiConfig"]>;
                 };
 
                 let subCtx = ctx.channel(ch.channelId);
@@ -130,7 +130,7 @@ export function apply(ctx: Context, config: ConfigType) {
 
         // 阿Q角色卡
         if (ch.ahQ) {
-            const rolecard = rolecardMap.get('ah-q');
+            const rolecard = rolecardMap.get("ah-q");
             if (!rolecard) {
                 logger.warn(`群聊 ${ch.channelId}：未找到角色卡 "ah-q"，跳过`);
             } else {
@@ -138,7 +138,7 @@ export function apply(ctx: Context, config: ConfigType) {
                     ...config,
                     __channelRoleConfig: ch.ahQConfig,
                 } as ConfigType & {
-                    __channelRoleConfig?: NonNullable<ChannelConfig['ahQConfig']>;
+                    __channelRoleConfig?: NonNullable<ChannelConfig["ahQConfig"]>;
                 };
 
                 let subCtx = ctx.channel(ch.channelId);
@@ -149,7 +149,7 @@ export function apply(ctx: Context, config: ConfigType) {
 
         // 哈姆雷特角色卡
         if (ch.hamlet) {
-            const rolecard = rolecardMap.get('hamlet');
+            const rolecard = rolecardMap.get("hamlet");
             if (!rolecard) {
                 logger.warn(`群聊 ${ch.channelId}：未找到角色卡 "hamlet"，跳过`);
             } else {
@@ -157,7 +157,7 @@ export function apply(ctx: Context, config: ConfigType) {
                     ...config,
                     __channelRoleConfig: ch.hamletConfig,
                 } as ConfigType & {
-                    __channelRoleConfig?: NonNullable<ChannelConfig['hamletConfig']>;
+                    __channelRoleConfig?: NonNullable<ChannelConfig["hamletConfig"]>;
                 };
 
                 let subCtx = ctx.channel(ch.channelId);
@@ -168,7 +168,7 @@ export function apply(ctx: Context, config: ConfigType) {
 
         // 堂吉诃德角色卡
         if (ch.donQuixote) {
-            const rolecard = rolecardMap.get('don-quixote');
+            const rolecard = rolecardMap.get("don-quixote");
             if (!rolecard) {
                 logger.warn(`群聊 ${ch.channelId}：未找到角色卡 "don-quixote"，跳过`);
             } else {
@@ -176,7 +176,7 @@ export function apply(ctx: Context, config: ConfigType) {
                     ...config,
                     __channelRoleConfig: ch.donQuixoteConfig,
                 } as ConfigType & {
-                    __channelRoleConfig?: NonNullable<ChannelConfig['donQuixoteConfig']>;
+                    __channelRoleConfig?: NonNullable<ChannelConfig["donQuixoteConfig"]>;
                 };
 
                 let subCtx = ctx.channel(ch.channelId);

@@ -30,7 +30,7 @@ export interface TriggerGroup {
     tag: string;
     name: string;
     desc?: string;
-    matchMode: 'include';
+    matchMode: "include";
     /** 优先级，数字越小越优先匹配。 */
     priority: number;
     keywords: string[];

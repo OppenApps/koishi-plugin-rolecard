@@ -9,7 +9,7 @@
  * - 群聊层：勾选 `belikov` 角色卡时才显示「别里科夫专属配置组」
  */
 
-import { Schema } from 'koishi';
+import { Schema } from "koishi";
 
 // ──────────────────────────────────────────────────────────────
 // 角色卡专属配置（通用工厂）
@@ -28,30 +28,30 @@ function makeRoleConfigSchema(roleName: string, tagOptions: { tag: string; name:
                 .description(`${roleName}冷却时间（秒），该群聊内两次触发的最小间隔`),
             tags: Schema.array(
                 Schema.object({
-                    tag: Schema.string().required().description('标签名'),
-                    name: Schema.string().required().description('标签别称'),
-                    enabled: Schema.boolean().default(true).description('是否启用该标签触发'),
-                })
+                    tag: Schema.string().required().description("标签名"),
+                    name: Schema.string().required().description("标签别称"),
+                    enabled: Schema.boolean().default(true).description("是否启用该标签触发"),
+                }),
             )
-                .role('table')
+                .role("table")
                 .default(tagOptions.map((t) => ({ ...t, enabled: true })))
-                .description('启用的触发标签：逐项控制每个标签是否在该群聊生效'),
+                .description("启用的触发标签：逐项控制每个标签是否在该群聊生效"),
             enableRandom: Schema.boolean()
                 .default(false)
-                .description('启用全部消息概率随机触发（神预言效果）'),
+                .description("启用全部消息概率随机触发（神预言效果）"),
             randomProbability: Schema.number()
                 .default(0.03)
                 .min(0)
                 .max(1)
                 .step(0.01)
-                .description('随机触发概率（0-1，如 0.03 表示 3%）'),
-            enableImage: Schema.boolean().default(false).description('启用角色卡插图'),
+                .description("随机触发概率（0-1，如 0.03 表示 3%）"),
+            enableImage: Schema.boolean().default(false).description("启用角色卡插图"),
             imageProbability: Schema.number()
                 .default(1)
                 .min(0)
                 .max(1)
                 .step(0.01)
-                .description('附带图片的概率（0-1，如 1 表示每次触发都发图）'),
+                .description("附带图片的概率（0-1，如 1 表示每次触发都发图）"),
         })
             .description(`${roleName}专属配置`)
             // biome-ignore lint/suspicious/noExplicitAny: 空对象 default 由 resolver 填充各字段默认值
@@ -61,73 +61,73 @@ function makeRoleConfigSchema(roleName: string, tagOptions: { tag: string; name:
 
 /** 别里科夫的标签选项（与 trigger-words.json 中的 groups 对应）。 */
 const belikovTagOptions = [
-    { tag: 'proposal', name: '提议与搞事' },
-    { tag: 'emotional', name: '情绪波动与违规边缘' },
-    { tag: 'rules', name: '规章制度与日常通知' },
-    { tag: 'distancing', name: '撇清关系与甩锅' },
+    { tag: "proposal", name: "提议与搞事" },
+    { tag: "emotional", name: "情绪波动与违规边缘" },
+    { tag: "rules", name: "规章制度与日常通知" },
+    { tag: "distancing", name: "撇清关系与甩锅" },
 ];
 
 /** 格里高尔的标签选项（与 trigger-words.json 中的 groups 对应）。 */
 const gregorSamsaTagOptions = [
-    { tag: 'work', name: '工作与加班' },
-    { tag: 'late', name: '迟到与请假' },
-    { tag: 'despair', name: '破防与绝望' },
-    { tag: 'family', name: '家庭与责任' },
-    { tag: 'body', name: '变形与身体' },
-    { tag: 'music', name: '音乐与美好' },
+    { tag: "work", name: "工作与加班" },
+    { tag: "late", name: "迟到与请假" },
+    { tag: "despair", name: "破防与绝望" },
+    { tag: "family", name: "家庭与责任" },
+    { tag: "body", name: "变形与身体" },
+    { tag: "music", name: "音乐与美好" },
 ];
 
 /** 孔乙己的标签选项（与 trigger-words.json 中的 groups 对应）。 */
 const kongYijiTagOptions = [
-    { tag: 'steal', name: '偷窃与狡辩' },
-    { tag: 'defend', name: '清白辩护' },
-    { tag: 'showoff', name: '卖弄学问' },
-    { tag: 'debt', name: '欠债与穷困' },
-    { tag: 'drink', name: '喝酒' },
-    { tag: 'laugh', name: '被嘲笑' },
+    { tag: "steal", name: "偷窃与狡辩" },
+    { tag: "defend", name: "清白辩护" },
+    { tag: "showoff", name: "卖弄学问" },
+    { tag: "debt", name: "欠债与穷困" },
+    { tag: "drink", name: "喝酒" },
+    { tag: "laugh", name: "被嘲笑" },
 ];
 
 /** 阿Q的标签选项（与 trigger-words.json 中的 groups 对应）。 */
 const ahQTagOptions = [
-    { tag: 'victory', name: '精神胜利' },
-    { tag: 'curse', name: '骂人嘴硬' },
-    { tag: 'bully', name: '欺软怕硬' },
-    { tag: 'revolution', name: '造反革命' },
-    { tag: 'poor', name: '穷酸炫耀' },
-    { tag: 'trial', name: '糊涂受审' },
+    { tag: "victory", name: "精神胜利" },
+    { tag: "curse", name: "骂人嘴硬" },
+    { tag: "bully", name: "欺软怕硬" },
+    { tag: "revolution", name: "造反革命" },
+    { tag: "poor", name: "穷酸炫耀" },
+    { tag: "trial", name: "糊涂受审" },
 ];
 
 /** 哈姆雷特的标签选项（与 trigger-words.json 中的 groups 对应）。 */
 const hamletTagOptions = [
-    { tag: 'ponder', name: '沉思与独白' },
-    { tag: 'madness', name: '装疯卖傻' },
-    { tag: 'revenge', name: '复仇与愤怒' },
-    { tag: 'despair', name: '绝望与厌世' },
-    { tag: 'action', name: '行动与决断' },
+    { tag: "ponder", name: "沉思与独白" },
+    { tag: "madness", name: "装疯卖傻" },
+    { tag: "revenge", name: "复仇与愤怒" },
+    { tag: "despair", name: "绝望与厌世" },
+    { tag: "action", name: "行动与决断" },
 ];
 
 /** 堂吉诃德的标签选项（与 trigger-words.json 中的 groups 对应）。 */
 const donQuixoteTagOptions = [
-    { tag: 'challenge', name: '挑战与冲锋' },
-    { tag: 'chivalry', name: '骑士信条' },
-    { tag: 'fantasy', name: '幻想妄想' },
-    { tag: 'failure', name: '失败嘴硬' },
-    { tag: 'freedom', name: '自由与理想' },
-    { tag: 'love', name: '骑士之爱' },
+    { tag: "challenge", name: "挑战与冲锋" },
+    { tag: "chivalry", name: "骑士信条" },
+    { tag: "fantasy", name: "幻想妄想" },
+    { tag: "failure", name: "失败嘴硬" },
+    { tag: "freedom", name: "自由与理想" },
+    { tag: "love", name: "骑士之爱" },
 ];
 
 /** 别里科夫专属配置组 Schema。 */
-const belikovConfigSchema = makeRoleConfigSchema('别里科夫', belikovTagOptions);
+const belikovConfigSchema = makeRoleConfigSchema("别里科夫", belikovTagOptions);
 /** 格里高尔专属配置组 Schema。 */
-const gregorSamsaConfigSchema = makeRoleConfigSchema('格里高尔', gregorSamsaTagOptions);
+const gregorSamsaConfigSchema = makeRoleConfigSchema("格里高尔", gregorSamsaTagOptions);
 /** 孔乙己专属配置组 Schema。 */
-const kongYijiConfigSchema = makeRoleConfigSchema('孔乙己', kongYijiTagOptions);
+const kongYijiConfigSchema = makeRoleConfigSchema("孔乙己", kongYijiTagOptions);
 /** 阿Q专属配置组 Schema。 */
-const ahQConfigSchema = makeRoleConfigSchema('阿Q', ahQTagOptions);
+const ahQConfigSchema = makeRoleConfigSchema("阿Q", ahQTagOptions);
 /** 哈姆雷特专属配置组 Schema。 */
-const hamletConfigSchema = makeRoleConfigSchema('哈姆雷特', hamletTagOptions);
+const hamletConfigSchema = makeRoleConfigSchema("哈姆雷特", hamletTagOptions);
 /** 堂吉诃德专属配置组 Schema。 */
-const donQuixoteConfigSchema = makeRoleConfigSchema('堂吉诃德', donQuixoteTagOptions);
+const donQuixoteConfigSchema = makeRoleConfigSchema("堂吉诃德", donQuixoteTagOptions);
 
 // ──────────────────────────────────────────────────────────────
 // 群聊配置项
@@ -143,14 +143,14 @@ const donQuixoteConfigSchema = makeRoleConfigSchema('堂吉诃德', donQuixoteTa
  */
 const ChannelItem = Schema.intersect([
     Schema.object({
-        channelId: Schema.string().required().description('群号或频道号'),
-        botId: Schema.string().default('').description('启用的机器人 selfId（留空表示不限定）'),
-        belikov: Schema.boolean().default(false).description('启用别里科夫 · 套中人'),
-        gregorSamsa: Schema.boolean().default(false).description('启用格里高尔 · 变形记'),
-        kongYiji: Schema.boolean().default(false).description('启用孔乙己 · 孔乙己'),
-        ahQ: Schema.boolean().default(false).description('启用阿Q · 阿Q正传'),
-        hamlet: Schema.boolean().default(false).description('启用哈姆雷特 · 哈姆雷特'),
-        donQuixote: Schema.boolean().default(false).description('启用堂吉诃德 · 堂吉诃德'),
+        channelId: Schema.string().required().description("群号或频道号"),
+        botId: Schema.string().default("").description("启用的机器人 selfId（留空表示不限定）"),
+        belikov: Schema.boolean().default(false).description("启用别里科夫 · 套中人"),
+        gregorSamsa: Schema.boolean().default(false).description("启用格里高尔 · 变形记"),
+        kongYiji: Schema.boolean().default(false).description("启用孔乙己 · 孔乙己"),
+        ahQ: Schema.boolean().default(false).description("启用阿Q · 阿Q正传"),
+        hamlet: Schema.boolean().default(false).description("启用哈姆雷特 · 哈姆雷特"),
+        donQuixote: Schema.boolean().default(false).description("启用堂吉诃德 · 堂吉诃德"),
     }),
     Schema.union([
         Schema.object({
@@ -194,7 +194,7 @@ const ChannelItem = Schema.intersect([
         }),
         Schema.object({}),
     ]),
-]).description('群聊配置');
+]).description("群聊配置");
 
 // ──────────────────────────────────────────────────────────────
 // 全局配置
@@ -205,14 +205,14 @@ export const Config = Schema.intersect([
     Schema.object({
         cooldownWhitelist: Schema.array(Schema.string())
             .default([])
-            .role('table')
-            .description('冷却白名单：填入用户 ID，这些用户的消息不受冷却限制（用于 Debug）'),
+            .role("table")
+            .description("冷却白名单：填入用户 ID，这些用户的消息不受冷却限制（用于 Debug）"),
     }),
 
     // ── 多群聊配置 ──
     Schema.object({
         channels: Schema.array(ChannelItem)
             .default([])
-            .description('群聊白名单：仅此处列出的群聊/频道会响应，未配置的群聊不触发'),
+            .description("群聊白名单：仅此处列出的群聊/频道会响应，未配置的群聊不触发"),
     }),
 ]);
